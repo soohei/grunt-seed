@@ -1,0 +1,97 @@
+//////////////////////////////
+// TYPOGRAPHY
+//////////////////////////////
+
+$font-size: 15px;
+$line-height: 30px;
+
+// font-family
+@mixin font-sans-serif{
+  font-family: Helvetica,Arial,'Hiragino Kaku Gothic Pro','メイリオ','ＭＳ Ｐゴシック','ヒラギノ角ゴ Pro W3',Sans-serif;
+}
+
+//////////////////////////////
+// COLORS
+//////////////////////////////
+
+$text-black: #000;
+$black: #000;
+$gray: #808080;
+$white: #fff;
+
+@mixin link-black-to-gray ($important: false){
+  @if $important == 'important' or $important == true {
+    $important: ' !important';
+  } @else {
+    $important: '';
+  }
+  color: $text-black;
+  text-decoration: underline;
+
+  &:visited{
+    color: $text-black;
+  }
+  &:hover, &.hover, &:active, &.active{
+    color: $gray;
+  }
+}
+
+//////////////////////////////
+// UTILS
+//////////////////////////////
+
+// override compass's clearfix
+@mixin clearfix{
+  &:before,
+  &:after {
+    content: '\0020';
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+  &:after { clear: both; }
+  & { zoom: 1; }
+}
+
+.clearfix{
+  @include clearfix;
+}
+
+// border box-sizing
+@mixin border-box{
+  @include box-sizing(border-box);
+}
+
+@mixin content-box{
+  @include box-sizing(content-box);
+}
+
+// float
+.pull-left{
+  float: left;
+}
+.pull-right{
+  float: right;
+}
+.pull-center{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// text-align
+.align-center{
+  text-align: center;
+}
+.align-left{
+  text-align: left;
+}
+.align-right{
+  text-align: right;
+}
+
+// strong
+.strong{
+  font-weight: bold;
+}

@@ -1,0 +1,39 @@
+// スプライト画像
+.sprite {
+  display: block;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  text-align: left;
+  text-indent: -10000px;
+  font-size: 1px;
+  line-height: 1px;
+}
+
+@mixin sprite-background($sprites, $sprites-img, $name, $scale, $skip-base-params:false) {
+  background-image: $sprites-img;
+  @include background-size(image-width(sprite-path($sprites)) / $scale auto);
+
+  //retina時に重複するパラメータをスキップするための分岐
+  @if not($skip-base-params){
+    height: image-height(sprite-file($sprites, $name)) / $scale;
+    width: image-width(sprite-file($sprites, $name)) / $scale;
+    $ypos: nth(sprite-position($sprites, $name), 2) / $scale;
+    background-position: 0 $ypos;
+  }
+}
+
+$sprites: sprite-map("sprite/*.png", $spacing: 2px);
+$sprites-img: sprite-url($sprites);
+$sprites_2x: sprite-map("sprite_2x/*.png", $spacing: 4px);
+$sprites-img_2x: sprite-url($sprites_2x);
+
+@mixin sprite-image ($name) {
+  .sprite {
+    @include sprite-background($sprites, $sprites-img, $name, 1);
+  }
+  .backgroundsize.retina_2x & {
+    .sprite {
+      @include sprite-background($sprites_2x, $sprites-img_2x, $name, 2, true);
+    }
+  }
+}
