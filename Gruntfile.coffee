@@ -110,6 +110,6 @@ module.exports = (grunt) ->
   grunt.registerTask('dev', ['exec:mv_sprite', 'compass:dev', 'coffee:compile', 'concat:jsdefault']);
 
   # distribution
-  grunt.registerTask('dist', ['compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:jsdefault', 'uglify', 'concat:license']);
+  grunt.registerTask('dist', ['exec:mv_sprite', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'coffee:compile', 'concat:jsdefault', 'uglify', 'concat:license']);
 
   return
