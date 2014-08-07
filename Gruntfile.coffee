@@ -90,16 +90,16 @@ module.exports = (grunt) ->
 
   # load Grunt Plugins
   grunt.loadNpmTasks('grunt-autoprefixer')
-  grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-combine-media-queries')
-  grunt.loadNpmTasks('grunt-exec');
-  grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-compass')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-connect')
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-csscomb')
   grunt.loadNpmTasks('grunt-csso')
+  grunt.loadNpmTasks('grunt-exec')
 
   # tasks
 
