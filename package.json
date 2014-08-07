@@ -1,26 +1,30 @@
 {
   "name": "sample",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Sohei Kitada",
-  "license": "ISC",
   "devDependencies": {
     "grunt": "~0.4.5",
+    // ベンダープレフィックス補完
     "grunt-autoprefixer": "~1.0.0",
+    // メディアクエリーをまとめる
     "grunt-combine-media-queries": "~1.0.19",
+    // CoffeeScript
     "grunt-contrib-coffee": "~0.11.0",
-    "grunt-contrib-commands": "~0.1.6",
+    // Compass
     "grunt-contrib-compass": "~0.9.1",
+    // ファイルの結合
     "grunt-contrib-concat": "~0.5.0",
+    // 簡易サーバー
     "grunt-contrib-connect": "~0.8.0",
+    // Minify JS
     "grunt-contrib-uglify": "~0.5.1",
+    // ファイルの更新検知
     "grunt-contrib-watch": "~0.6.1",
+    // CSSのプロパティをソートする
     "grunt-csscomb": "~3.0.0",
+    // Minify CSS
     "grunt-csso": "~0.6.3",
+    // シェルコマンドの実行
     "grunt-exec": "~0.4.6"
   }
 }
