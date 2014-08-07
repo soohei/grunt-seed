@@ -6,13 +6,11 @@ module.exports = (grunt) ->
     compass:
       dist:
         options:
-          # not working?
           config: 'config.rb'
-          # outputStyle: 'compressed'
-          # environment: 'production'
+          outputStyle: 'compressed'
+          environment: 'production'
       dev:
         options:
-          # not working?
           config: 'config.rb'
 
     coffee:
@@ -33,10 +31,10 @@ module.exports = (grunt) ->
         src: 'assets/css/style.css'
         dest: 'assets/css/style.css'
 
-    csso: # task name
-      default: # target name
-        src: 'assets/css/style.css' # input file
-        dest: 'assets/css/style.css' # output file
+    csso:
+      default:
+        src: 'assets/css/style.css'
+        dest: 'assets/css/style.css'
 
     cmq:
       default:
@@ -95,7 +93,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-combine-media-queries')
   grunt.loadNpmTasks('grunt-exec');
-  grunt.loadNpmTasks('grunt-compass');
+  grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-connect')
   grunt.loadNpmTasks('grunt-contrib-uglify');
