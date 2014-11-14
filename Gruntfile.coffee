@@ -114,15 +114,15 @@ module.exports = (grunt) ->
     ###################################
 
     browserSync: {
-        bsFiles: {
-            src : ['assets/**/*', '**/*.html']
-        },
-        options: {
-            watchTask: true
-            server: {
-                baseDir: "./"
-            }
+      bsFiles: {
+        src : ['assets/**/*', '**/*.html']
+      },
+      options: {
+        watchTask: true
+        server: {
+          baseDir: "./"
         }
+      }
     }
 
 
@@ -131,21 +131,21 @@ module.exports = (grunt) ->
     ###################################
 
     watch:
-      options: # enable livereload
+      options:
         livereload: true
-      compass: # watch scss files
+      compass:
         files: 'source/sass/**/*.scss'
         tasks: ['compass:dev']
-      coffee: # watch scss files
+      coffee:
         files: 'source/coffee/**/*.coffee'
         tasks: ['coffee:compile']
-      js: # watch js files
+      js:
         files: ['source/libs/js/**/*.js']
         tasks: ['concat:libs_js']
-      sprites: # watch sprites files
+      sprites:
         files: 'source/sprites/**'
         tasks: ['exec:mv_sprite', 'compass:dev']
-      html: # watch html files
+      html:
         files: '**/*.html'
         tasks: []
 
