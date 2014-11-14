@@ -2,13 +2,14 @@
 // TYPOGRAPHY
 //////////////////////////////
 
-$font-size: 15px;
+$font-size: 16px;
 $line-height: 30px;
 
 // font-family
 @mixin font-sans-serif{
-  font-family: Helvetica,Arial,'Hiragino Kaku Gothic Pro','メイリオ','ＭＳ Ｐゴシック','ヒラギノ角ゴ Pro W3',Sans-serif;
+  font-family: Helvetica, Arial, 'Hiragino Kaku Gothic Pro', 'メイリオ', 'ＭＳ Ｐゴシック', 'ヒラギノ角ゴ Pro W3', sans-serif;
 }
+
 
 //////////////////////////////
 // COLORS
@@ -36,12 +37,13 @@ $white: #fff;
   }
 }
 
+
 //////////////////////////////
 // UTILS
 //////////////////////////////
 
 // override compass's clearfix
-@mixin clearfix{
+@mixin clearfix {
   &:before,
   &:after {
     content: '\0020';
@@ -55,43 +57,40 @@ $white: #fff;
   & { zoom: 1; }
 }
 
-.clearfix{
+.clearfix {
   @include clearfix;
 }
 
 // border box-sizing
-@mixin border-box{
+@mixin border-box {
   @include box-sizing(border-box);
 }
 
-@mixin content-box{
+@mixin content-box {
   @include box-sizing(content-box);
 }
 
-// float
-.pull-left{
-  float: left;
-}
-.pull-right{
-  float: right;
-}
-.pull-center{
-  margin-left: auto;
-  margin-right: auto;
-}
 
-// text-align
-.align-center{
-  text-align: center;
-}
-.align-left{
-  text-align: left;
-}
-.align-right{
-  text-align: right;
-}
+//////////////////////////////
+// RESPONSIVE LAYOUT
+//////////////////////////////
 
-// strong
-.strong{
-  font-weight: bold;
+// responsive mixins
+$break-small: 480px;
+$break-large: 1024px;
+
+@mixin respond-to($media) {
+  @if $media == smartphone {
+    @media only screen and (max-width: $break-small) {
+      @content;
+    }
+  }
+  @else if $media == tablet {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) { @content; }
+  }
+  @else if $media == pc {
+    @media only screen and (min-width: $break-large) {
+      @content;
+    }
+  }
 }

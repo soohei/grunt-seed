@@ -1,16 +1,22 @@
 grunt-template
 ==============
 
-grunt 作業テンプレ
+### setup
+```sh
+npm install
+```
 
-### Install Grunt and gruntplugins
-npm install grunt --save-dev
-
-### watch
+### watch & start server
+```sh
 grunt
+```
 
 ### development
+```sh
 grunt dev
+```
 
 ### distribution
+```sh
 grunt dist
+```

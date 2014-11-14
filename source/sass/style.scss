@@ -1,10 +1,46 @@
-@charset "UTF-8";
 @import "compass";
 @import "compass/reset/";
-@import "compass/utilities/sprites";
-@import "compass/css3/background-size";
-@import 'compass/css3/filter';
-@import "_animation-util";
-@import "_variables";
-// @import "_sprites";
+@import "common/_variables";
+@import "common/_sprites";
 
+body {
+  padding: 10px;
+
+  a {
+    @include link-black-to-gray;
+  }
+}
+
+.sample-section {
+  margin-bottom: 10px;
+
+  h1 {
+    margin-bottom: 10px;
+  }
+
+  ul > li {
+    float: left;
+    margin-bottom: 10px;
+    margin-left: 1em;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    // responsive layout sample
+    @include respond-to(smartphone) {
+      float: none;
+      margin-left: 0;
+    }
+  }
+}
+
+// sprite image sample
+
+.sample-1 {
+  @include sprite-image-common('sample-1');
+}
+
+.sample-2 {
+  @include sprite-image-common('sample-2');
+}

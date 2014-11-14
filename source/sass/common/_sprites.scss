@@ -1,10 +1,14 @@
-// スプライト画像
-.sprite {
+//////////////////////////////
+// Sprite image mixin
+//////////////////////////////
+@mixin sprite {
   display: block;
   overflow: hidden;
   background-repeat: no-repeat;
   text-align: left;
-  text-indent: -10000px;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
   font-size: 1px;
   line-height: 1px;
 }
@@ -13,7 +17,6 @@
   background-image: $sprites-img;
   @include background-size(image-width(sprite-path($sprites)) / $scale auto);
 
-  //retina時に重複するパラメータをスキップするための分岐
   @if not($skip-base-params){
     height: image-height(sprite-file($sprites, $name)) / $scale;
     width: image-width(sprite-file($sprites, $name)) / $scale;
@@ -22,18 +25,20 @@
   }
 }
 
-$sprites: sprite-map("sprite/*.png", $spacing: 2px);
-$sprites-img: sprite-url($sprites);
-$sprites_2x: sprite-map("sprite_2x/*.png", $spacing: 4px);
-$sprites-img_2x: sprite-url($sprites_2x);
+$common-sprites: sprite-map("common/*.png", $spacing: 2px);
+$common-sprites-img: sprite-url($common-sprites);
+$common-sprites_2x: sprite-map("common_2x/*.png", $spacing: 4px);
+$common-sprites-img_2x: sprite-url($common-sprites_2x);
 
-@mixin sprite-image ($name) {
+@mixin sprite-image-common ($name) {
   .sprite {
-    @include sprite-background($sprites, $sprites-img, $name, 1);
+    @include sprite;
+    @include sprite-background($common-sprites, $common-sprites-img, $name, 1);
   }
   .backgroundsize.retina_2x & {
     .sprite {
-      @include sprite-background($sprites_2x, $sprites-img_2x, $name, 2, true);
+      @include sprite-background($common-sprites_2x, $common-sprites-img_2x, $name, 2, true);
     }
   }
 }
+

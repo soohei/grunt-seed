@@ -3,26 +3,79 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
 
+    ###################################
+    #  build
+    ###################################
+
     compass:
       dist:
         options:
-          config: 'config.rb'
+          config: 'source/sass/config/config.rb'
           outputStyle: 'compressed'
           environment: 'production'
       dev:
         options:
-          config: 'config.rb'
+          config: 'source/sass/config/config.rb'
 
     coffee:
       compile:
         options:
           join: true
         files:
-          'source/js/script.js': ['source/coffee/**/*.coffee']
+          'assets/js/script.js': ['source/coffee/**/*.coffee']
+
+
+    ###################################
+    #  concat
+    ###################################
+
+    concat:
+      libs_js:
+        src: [
+          'source/libs/js/**/*.js'
+        ]
+        dest: 'assets/js/libs.js'
+
+      license_js: {
+        src: [
+          'assets/js/libs.js'
+          'source/libs/license.js'
+        ]
+        dest: 'assets/js/libs.js'
+      }
+
+      license_css: {
+        src: [
+          'assets/css/style.css'
+          'source/libs/license.css'
+        ]
+        dest: 'assets/css/style.css'
+      }
+
+    ###################################
+    #  others
+    ###################################
+
+    clean: ['assets/css/**/*',
+            'assets/js/**/*',
+            'assets/img/**/*',
+            'assets/sprites/**/*']
+
+    copy: {
+      images: {
+        files: [
+          { expand: true, cwd: 'source/img/', src: ['**'], dest: 'assets/img/' }
+        ]
+      }
+    }
 
     exec:
       mv_sprite:
-        cmd: 'ruby mv_sprite.rb'
+        cmd: 'ruby source/sprites/mv_sprite.rb'
+
+    ###################################
+    #  release
+    ###################################
 
     autoprefixer:
       options:
@@ -46,29 +99,36 @@ module.exports = (grunt) ->
         src: 'assets/css/style.css'
         dest: 'assets/css/style.css'
 
-    concat:
-      jsdefault:
-        src: [
-          'source/jslib/**/*.js'
-          'source/js/**/*.js'
-        ]
-        dest: 'assets/js/script.js'
-
-      license: {
-        src: [
-          'source/jslib/_license.js'
-          'assets/js/script.js'
-        ]
-        dest: 'assets/js/script.js'
-      }
-
     uglify:
       default:
         src: 'assets/js/script.js'
         dest: 'assets/js/script.js'
 
-    connect:
-      uses_defaults: {}
+      libs:
+        src: 'assets/js/libs.js'
+        dest: 'assets/js/libs.js'
+
+
+    ###################################
+    #  connect
+    ###################################
+
+    browserSync: {
+        bsFiles: {
+            src : ['assets/**/*', '**/*.html']
+        },
+        options: {
+            watchTask: true
+            server: {
+                baseDir: "./"
+            }
+        }
+    }
+
+
+    ###################################
+    #  watch
+    ###################################
 
     watch:
       options: # enable livereload
@@ -80,36 +140,51 @@ module.exports = (grunt) ->
         files: 'source/coffee/**/*.coffee'
         tasks: ['coffee:compile']
       js: # watch js files
-        files: ['source/js/**/*.js', 'source/jslib/**/*.js']
-        tasks: ['concat:jsdefault']
-      image: # watch image files
-        files: 'source/images/**'
-        tasks: ['exec:mv_sprite']
+        files: ['source/libs/js/**/*.js']
+        tasks: ['concat:libs_js']
+      sprites: # watch sprites files
+        files: 'source/sprites/**'
+        tasks: ['exec:mv_sprite', 'compass:dev']
       html: # watch html files
         files: '**/*.html'
+        tasks: []
 
-  # load Grunt Plugins
+
+  ###################################
+  #
+  #  load
+  #
+  ###################################
+
   grunt.loadNpmTasks('grunt-autoprefixer')
+  grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-combine-media-queries')
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-compass')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-connect')
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-csscomb')
   grunt.loadNpmTasks('grunt-csso')
   grunt.loadNpmTasks('grunt-exec')
 
-  # tasks
+
+  ###################################
+  #
+  #  tasks
+  #
+  ###################################
 
   # defalt
-  grunt.registerTask('default', ['connect', 'watch']);
+  grunt.registerTask('default', ['browserSync', 'watch']);
 
   # development
-  grunt.registerTask('dev', ['exec:mv_sprite', 'compass:dev', 'coffee:compile', 'concat:jsdefault']);
+  grunt.registerTask('dev', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dev', 'coffee:compile', 'concat:libs_js']);
 
   # distribution
-  grunt.registerTask('dist', ['exec:mv_sprite', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'coffee:compile', 'concat:jsdefault', 'uglify', 'concat:license']);
+  grunt.registerTask('dist', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:license_css', 'coffee:compile', 'concat:libs_js', 'uglify', 'uglify:libs', 'concat:license_js']);
 
   return

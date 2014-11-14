@@ -19,27 +19,36 @@ for filePath in dir_entries do
 
   # 画像のみに処理
   if( ext == '.jpg' || ext == '.png' || ext == '.gif' )
+    # ディレクトリ
     dir = File::dirname(filePath) # ディレクトリ
-    base = File::basename(filePath,ext) # 拡張子除去
+    my_dir = File::basename(dir) # e.g. sprite
+    parent_dir = File::dirname(dir) # e.g. path_to_htdocs/common/images
+    parent_parent_dir = File::dirname(parent_dir) # e.g. path_to_htdocs/common
+    base = File::basename(filePath,ext) # 拡張子除去 e.g. hoge
+
     twox_index = base.index('@2x')
 
-    # @2xを含む
+    # @2xの処理
     if( twox_index && twox_index >= 0 )
-      p "#{dir}/#{base}#{ext}"
-      parent_dir = File::dirname(dir) # e.g. path_to_htdocs/common/img
-      my_dir = File::basename(dir) # e.g. sprite
       twox_my_dir = "#{my_dir}_2x" # e.g. sprite_2x
-      twox_dir =  "#{parent_dir}/#{twox_my_dir}" # e.g. path_to_htdocs/common/img/sprite_2x
+      twox_dir =  "#{parent_parent_dir}/sprites/#{twox_my_dir}" # e.g. path_to_htdocs/common/sprites/sprite_2x
       twox_base_ext = "#{base.sub('@2x', '_2x')}#{ext}" # e.g. hoge_2x.png
 
-      # ディレクトリがなければ作る
-      FileUtils.mkdir_p(twox_dir) unless FileTest.exist?(twox_dir)
-
       # ファイルを移動する
+      p "#{twox_dir}/#{twox_base_ext}"
+      FileUtils.mkdir_p(twox_dir) unless FileTest.exist?(twox_dir) # ディレクトリがなければ作る
       File.rename filePath, "#{twox_dir}/#{twox_base_ext}"
 
-      p "#{twox_dir}/#{twox_base_ext}"
+    else
+      # @1xの処理
+      onex_dir = "#{parent_parent_dir}/sprites/#{my_dir}" # e.g. path_to_htdocs/common/sprites/sprite
+      onex_base_ext = "#{base}#{ext}" # e.g. hoge.png
+
+      # ファイルを移動する
       p '--'
+      p "#{onex_dir}/#{onex_base_ext}"
+      FileUtils.mkdir_p(onex_dir) unless FileTest.exist?(onex_dir) # ディレクトリがなければ作る
+      File.rename filePath, "#{onex_dir}/#{onex_base_ext}"
     end
 
   end
