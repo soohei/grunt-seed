@@ -157,14 +157,14 @@ module.exports = (grunt) ->
   ###################################
 
   grunt.loadNpmTasks('grunt-autoprefixer')
-  grunt.loadNpmTasks('grunt-browser-sync');
+  grunt.loadNpmTasks('grunt-browser-sync')
   grunt.loadNpmTasks('grunt-combine-media-queries')
-  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-compass')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-connect')
-  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-csscomb')
@@ -179,12 +179,12 @@ module.exports = (grunt) ->
   ###################################
 
   # defalt
-  grunt.registerTask('default', ['browserSync', 'watch']);
+  grunt.registerTask('default', ['browserSync', 'watch'])
 
   # development
-  grunt.registerTask('dev', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dev', 'coffee:compile', 'concat:libs_js']);
+  grunt.registerTask('dev', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dev', 'coffee:compile', 'concat:libs_js'])
 
   # distribution
-  grunt.registerTask('dist', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:license_css', 'coffee:compile', 'concat:libs_js', 'uglify', 'uglify:libs', 'concat:license_js']);
+  grunt.registerTask('dist', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:license_css', 'coffee:compile', 'concat:libs_js', 'uglify', 'uglify:libs', 'concat:license_js'])
 
   return
