@@ -69,10 +69,6 @@ module.exports = (grunt) ->
       }
     }
 
-    exec:
-      mv_sprite:
-        cmd: 'ruby source/sprites/mv_sprite.rb'
-
     ###################################
     #  release
     ###################################
@@ -142,9 +138,6 @@ module.exports = (grunt) ->
       js:
         files: ['source/libs/js/**/*.js']
         tasks: ['concat:libs_js']
-      sprites:
-        files: 'source/sprites/**'
-        tasks: ['exec:mv_sprite', 'compass:dev']
       html:
         files: '**/*.html'
         tasks: []
@@ -169,7 +162,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-csscomb')
   grunt.loadNpmTasks('grunt-csso')
-  grunt.loadNpmTasks('grunt-exec')
 
 
   ###################################
@@ -182,9 +174,9 @@ module.exports = (grunt) ->
   grunt.registerTask('default', ['browserSync', 'watch'])
 
   # development
-  grunt.registerTask('dev', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dev', 'coffee:compile', 'concat:libs_js'])
+  grunt.registerTask('dev', ['clean', 'copy:images', 'compass:dev', 'coffee:compile', 'concat:libs_js'])
 
   # distribution
-  grunt.registerTask('dist', ['clean', 'copy:images', 'exec:mv_sprite', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:license_css', 'coffee:compile', 'concat:libs_js', 'uglify', 'uglify:libs', 'concat:license_js'])
+  grunt.registerTask('dist', ['clean', 'copy:images', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:license_css', 'coffee:compile', 'concat:libs_js', 'uglify', 'uglify:libs', 'concat:license_js'])
 
   return
