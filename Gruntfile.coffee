@@ -161,13 +161,13 @@ module.exports = (grunt) ->
       dev:
         options:
           match: [
-            '/assets/scripts/main.js'
-            '/assets/scripts/vendor.js'
-            '/assets/styles/vendor.css'
-            '/assets/styles/styles.css'
+            './assets/scripts/main.js'
+            './assets/scripts/vendor.js'
+            './assets/styles/vendor.css'
+            './assets/styles/styles.css'
           ]
         files:
-          src: ['head.php']
+          src: ['index.html']
 
 
     ###################################
