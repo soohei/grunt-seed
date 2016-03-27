@@ -1,182 +1,289 @@
 module.exports = (grunt) ->
+  # Load grunt tasks automatically
+  require('load-grunt-tasks')(grunt)
+
+  # Time how long tasks take. Can help when optimizing build times
+  require('time-grunt')(grunt)
+
   # load package.json
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
 
     ###################################
-    #  build
-    ###################################
+    # compile
 
     compass:
-      dist:
+      default:
         options:
-          config: 'source/sass/config/config.rb'
-          outputStyle: 'compressed'
-          environment: 'production'
-      dev:
-        options:
-          config: 'source/sass/config/config.rb'
+          config: 'source/styles/config/config.rb'
 
     coffee:
-      compile:
+      options:
+        sourceMap: true
+      default:
+        expand: true
+        cwd:    'source/scripts/'
+        src:    '**/*.coffee'
+        dest:   '.tmp/scripts/'
+        ext:    '.js'
+
+
+    ###################################
+    # clean, copy
+
+    clean:
+      default:  [ '.tmp', 'assets' ]
+      dist:     [ 'assets/**/*.css.map', 'assets/**/*.js.map' ]
+
+    copy:
+      css:
+        files: [
+          expand: true
+          cwd:    'source'
+          src:    ['styles/**/*.css']
+          dest:   '.tmp'
+        ]
+      js:
+        files: [
+          expand: true
+          cwd:    'source'
+          src:    [ 'scripts/**/*.js' ]
+          dest:   '.tmp'
+        ]
+      webfonts:
+        files: [
+          expand: true
+          cwd:    'source/webfonts'
+          src:    ['*.{eot,svg,ttf,woff,js}']
+          dest:   'assets/styles'
+        ]
+      static:
+        files: [
+          expand: true
+          cwd:    'source'
+          src:    [ 'images/**/*' ]
+          dest:   'assets'
+        ]
+
+
+    ###################################
+    # uglify, concat
+
+    uglify:
+      options:
+        drop_console: true
+      vendor:
         options:
-          join: true
+          preserveComments: 'some'
         files:
-          'assets/js/script.js': ['source/coffee/**/*.coffee']
+          'assets/scripts/vendor.js': [
+            'source/libs/console-safer.js'
+            'source/bower_components/respond/dest/respond.min.js'
+            'source/bower_components/modernizr/modernizr.js'
+            'source/bower_components/css_browser_selector/css_browser_selector.min.js'
+            'source/bower_components/jquery/dist/jquery.min.js'
+            'source/bower_components/bootstrap/dist/js/bootstrap.min.js'
+          ]
+      dist:
+        files:
+          'assets/scripts/main.js': [
+            '.tmp/scripts/**/*.js'
+          ]
 
-
-    ###################################
-    #  concat
-    ###################################
+    cssmin:
+      vendor:
+        options:
+          preserveComments: 'some'
+        files:
+          'assets/styles/vendor.css': [
+            'source/bower_components/bootstrap/dist/css/bootstrap.min.css'
+          ]
+      dist:
+        files:
+          'assets/styles/styles.css': [
+            '.tmp/styles/**/*.css'
+          ]
 
     concat:
-      libs_js:
-        src: [
-          'source/libs/js/**/*.js'
+      options:
+        sourceMap: true
+      vendor_js:
+        files: '<%= uglify.vendor.files %>'
+      js:
+        files: '<%= uglify.dist.files %>'
+      vendor_css:
+        files: '<%= cssmin.vendor.files %>'
+      css:
+        files: '<%= cssmin.dist.files %>'
+
+    svgmin:
+      options:
+        plugins: [
+          {
+            removeViewBox: false
+          }
+          {
+            removeUselessStrokeAndFill: false
+          }
         ]
-        dest: 'assets/js/libs.js'
-
-      license_js: {
-        src: [
-          'assets/js/libs.js'
-          'source/libs/license.js'
-        ]
-        dest: 'assets/js/libs.js'
-      }
-
-      license_css: {
-        src: [
-          'assets/css/style.css'
-          'source/libs/license.css'
-        ]
-        dest: 'assets/css/style.css'
-      }
-
-    ###################################
-    #  others
-    ###################################
-
-    clean: ['assets/css/**/*',
-            'assets/js/**/*',
-            'assets/img/**/*',
-            'assets/sprites/**/*']
-
-    copy: {
-      images: {
+      dist:
         files: [
-          { expand: true, cwd: 'source/img/', src: ['**'], dest: 'assets/img/' }
+          expand: true
+          cwd:    'source/svg'
+          src:    [ '**/*.svg' ]
+          dest:   'source/svg_min'
         ]
-      }
-    }
+
 
     ###################################
-    #  release
-    ###################################
+    # finalize
 
     autoprefixer:
       options:
+        map: true
         browsers: ['last 2 version', 'ie 8', 'ie 9']
       default:
-        src: 'assets/css/style.css'
-        dest: 'assets/css/style.css'
-
-    csso:
-      default:
-        src: 'assets/css/style.css'
-        dest: 'assets/css/style.css'
+        expand: true
+        cwd:    'assets/styles'
+        src:    '**/*.css'
+        dest:   'assets/styles'
 
     cmq:
-      default:
-        src: 'assets/css/style.css'
-        dest: 'assets/css/style.css'
+      default: '<%= autoprefixer.default %>'
 
     csscomb:
-      default:
-        src: 'assets/css/style.css'
-        dest: 'assets/css/style.css'
+      default: '<%= autoprefixer.default %>'
 
-    uglify:
-      default:
-        src: 'assets/js/script.js'
-        dest: 'assets/js/script.js'
+    csso:
+      default: '<%= autoprefixer.default %>'
 
-      libs:
-        src: 'assets/js/libs.js'
-        dest: 'assets/js/libs.js'
+    cachebreaker:
+      dev:
+        options:
+          match: [
+            '/assets/scripts/main.js'
+            '/assets/scripts/vendor.js'
+            '/assets/styles/vendor.css'
+            '/assets/styles/styles.css'
+          ]
+        files:
+          src: ['head.php']
+
+
+    ###################################
+    # watch
+
+    watch:
+      css:
+        files: 'source/styles/**/*.css'
+        tasks: ['newer:copy:css', 'concat:css']
+
+      scss:
+        files: 'source/styles/**/*.scss'
+        tasks: ['compass', 'concat:css', 'autoprefixer']
+
+      vendor:
+        files: ['source/bower_components/**/*.{css,js}', 'Gruntfile.coffee']
+        tasks: ['concat:vendor_css', 'autoprefixer', 'concat:vendor_js']
+
+      js:
+        files: 'source/scripts/**/*.js'
+        tasks: ['newer:copy:js', 'concat:js']
+
+      coffee:
+        files: ['source/scripts/**/*.coffee']
+        tasks: ['newer:coffee', 'concat:js']
+
+      svg:
+        files: ['source/svg/**/*.svg']
+        tasks: ['newer:svgmin', 'compass', 'concat:css', 'autoprefixer']
+
+      webfonts:
+        files: ['source/webfonts/*.{eot,svg,ttf,woff,js}']
+        tasks: ['newer:copy:webfonts']
+
+      static:
+        files: ['source/images/**/*']
+        tasks: ['newer:copy:static']
 
 
     ###################################
     #  connect
     ###################################
 
-    browserSync: {
-      bsFiles: {
-        src : ['assets/**/*', '**/*.html']
-      },
-      options: {
-        watchTask: true
-        server: {
-          baseDir: "./"
-        }
-      }
-    }
+    browserSync:
+      bsFiles:
+        src : [
+          '**/*.html'
+          '**/*.php'
+          'images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+          'assets/scripts/**/*.js'
+          'assets/styles/**/*.css'
+        ]
 
-
-    ###################################
-    #  watch
-    ###################################
-
-    watch:
       options:
-        livereload: true
-      compass:
-        files: 'source/sass/**/*.scss'
-        tasks: ['compass:dev']
-      coffee:
-        files: 'source/coffee/**/*.coffee'
-        tasks: ['coffee:compile']
-      js:
-        files: ['source/libs/js/**/*.js']
-        tasks: ['concat:libs_js']
-      html:
-        files: '**/*.html'
-        tasks: []
+        watchTask: true
+        server:
+          baseDir: "./"
 
 
   ###################################
   #
-  #  load
-  #
-  ###################################
-
-  grunt.loadNpmTasks('grunt-autoprefixer')
-  grunt.loadNpmTasks('grunt-browser-sync')
-  grunt.loadNpmTasks('grunt-combine-media-queries')
-  grunt.loadNpmTasks('grunt-contrib-clean')
-  grunt.loadNpmTasks('grunt-contrib-coffee')
-  grunt.loadNpmTasks('grunt-contrib-compass')
-  grunt.loadNpmTasks('grunt-contrib-concat')
-  grunt.loadNpmTasks('grunt-contrib-connect')
-  grunt.loadNpmTasks('grunt-contrib-copy')
-  grunt.loadNpmTasks('grunt-contrib-uglify')
-  grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-csscomb')
-  grunt.loadNpmTasks('grunt-csso')
-
-
-  ###################################
-  #
-  #  tasks
+  # tasks
   #
   ###################################
 
   # defalt
-  grunt.registerTask('default', ['browserSync', 'watch'])
-
-  # development
-  grunt.registerTask('dev', ['clean', 'copy:images', 'compass:dev', 'coffee:compile', 'concat:libs_js'])
+  grunt.registerTask 'default', [
+                                  # clean
+                                  'clean'
+                                  'copy:webfonts'
+                                  'copy:static'
+                                  # styles
+                                  'svgmin'
+                                  'compass'
+                                  'copy:css'
+                                  'concat:vendor_css'
+                                  'concat:css'
+                                  'autoprefixer'
+                                  # scripts
+                                  'coffee'
+                                  'copy:js'
+                                  'concat:vendor_js'
+                                  'concat:js'
+                                  # watch
+                                  'browserSync'
+                                  'watch'
+                                ]
 
   # distribution
-  grunt.registerTask('dist', ['clean', 'copy:images', 'compass:dist', 'autoprefixer', 'cmq', 'csscomb', 'csso', 'concat:license_css', 'coffee:compile', 'concat:libs_js', 'uglify', 'uglify:libs', 'concat:license_js'])
+  grunt.registerTask 'dist', [
+                                # clean
+                                'clean'
+                                'copy:webfonts'
+                                'copy:static'
+                                # styles
+                                'svgmin'
+                                'compass'
+                                'copy:css'
+                                'cssmin:vendor'
+                                'cssmin:dist'
+                                'autoprefixer'
+                                # scripts
+                                'coffee'
+                                'copy:js'
+                                'uglify:vendor'
+                                'uglify:dist'
+                                # finalize
+                                # 'cmq'
+                                # 'csscomb'
+                                'csso'
+                                'clean:dist'
+                                'cachebreaker'
+                              ]
 
   return
+
+################################
+# References:
+# https://www.allantatter.com/wordpress-theme-development-grunt-js/

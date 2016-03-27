@@ -1,0 +1,18 @@
+@import 'compass';
+@import 'utils_bs';
+@import 'variables';
+@import 'utils';
+
+.sample {
+  @include helvetica-light;
+  margin: 30px;
+
+  .logo {
+    @include get-my-sprite('logo', true, true);
+    @include hidden-text;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @include helvetica-bold;
+  }
+}

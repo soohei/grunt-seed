@@ -1,0 +1,92 @@
+////////////////////////////////////////////////
+// Bootstrapのbreakpointに合わせたMedia Query指定
+////////////////////////////////////////////////
+
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+
+// 指定したサイズ以上に適用する
+@mixin respond-to($size) {
+  @if $size == 'xs' {
+    @content;
+  } @else if $size == 'sm' {
+    @media (min-width: $screen-sm-min) {
+      @content;
+    }
+  } @else if $size == 'md' {
+    @media (min-width: $screen-md-min) {
+      @content;
+    }
+  } @else if $size == 'lg' {
+    @media (min-width: $screen-lg-min) {
+      @content;
+    }
+  }
+}
+
+// 指定したサイズ以下に適用する
+@mixin respond-up-to($size) {
+  @if $size == 'xs' {
+    @media (max-width: $screen-sm-min - 1) {
+      @content;
+    }
+  } @else if $size == 'sm' {
+    @media (max-width: $screen-md-min - 1) {
+      @content;
+    }
+  } @else if $size == 'md' {
+    @media (max-width: $screen-lg-min - 1) {
+      @content;
+    }
+  } @else if $size == 'lg' {
+    @content;
+  }
+}
+
+////////////////////////////////////////////////
+// navbarのレイアウトを強制的にxsバージョンに戻す
+// http://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse
+////////////////////////////////////////////////
+
+@mixin force-reset-navbar {
+  .navbar-header {
+    float: none;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-collapse {
+    border-top: 1px solid transparent;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-collapse.collapse {
+    display: none !important;
+  }
+
+  .navbar-collapse.collapse.in {
+    display: block !important;
+  }
+
+  .navbar-nav {
+    float: none !important;
+    margin: 7.5px -15px;
+  }
+
+  .navbar-nav > li {
+    float: none;
+  }
+
+  .navbar-nav > li > a {
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+
+  .navbar-text {
+    float: none;
+    margin: 15px 0;
+  }
+}

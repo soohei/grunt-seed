@@ -1,0 +1,64 @@
+@import 'compass/utilities/sprites';
+
+////////////////////////////////
+// Typography
+////////////////////////////////
+
+@mixin helvetica-light {
+  font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', sans-serif;
+}
+
+@mixin helvetica-bold {
+  font-family: 'HelveticaNeue', 'Helvetica Neue', sans-serif;
+  font-weight: 700;
+}
+
+
+////////////////////////////////
+// Sprite image
+////////////////////////////////
+
+$png-1x-sprites: sprite-map('png_1x/*.png', $spacing: 2px);
+$png-2x-sprites: sprite-map('png_2x/*.png', $spacing: 4px);
+
+@mixin hidden-text {
+  color: transparent !important;
+  text-indent: -100% !important;
+  overflow: hidden !important;
+}
+
+@mixin get-my-sprite($sprite, $retina: false, $svg: false) {
+  $map-url: sprite-url($png-1x-sprites);
+  $sprite-position: sprite-position($png-1x-sprites, $sprite);
+  background: $map-url $sprite-position no-repeat;
+
+  $sprite-image: sprite-file($png-1x-sprites, $sprite);
+  width: image-width($sprite-image);
+  height: image-height($sprite-image);
+
+  @if $retina == true {
+    @include media-retina {
+      background-image: sprite-url($png-2x-sprites);
+      background-size: image-width(sprite-path($png-1x-sprites)) auto;
+    }
+  }
+
+  // SVGのサポート
+  @if $svg == true {
+    .svg & {
+      background-image: inline-image('../svg_min/#{$sprite}.svg', 'image/svg+xml');
+      background-position: 0 0;
+      background-size: image-width( $sprite-image ) image-height( $sprite-image );
+    }
+  }
+}
+
+////////////////////////////////
+// Detect Retina display
+////////////////////////////////
+
+@mixin media-retina() {
+  @media only screen and (min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+    @content;
+  }
+}

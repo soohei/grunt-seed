@@ -1,11 +1,4 @@
-# https://github.com/gruntjs/grunt/blob/master/.gitignore
-
-node_modules
-.npm-debug.log
-tmp
-
-
-# Created by https://www.gitignore.io
+# Created by https://www.gitignore.io/api/osx,windows,grunt,sass,coffeescript,sublimetext,bower
 
 ### OSX ###
 .DS_Store
@@ -19,9 +12,13 @@ Icon
 # Thumbnails
 ._*
 
-# Files that might appear on external disk
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
 .Spotlight-V100
+.TemporaryItems
 .Trashes
+.VolumeIcon.icns
 
 # Directories potentially created on remote AFP share
 .AppleDB
@@ -52,9 +49,22 @@ $RECYCLE.BIN/
 *.lnk
 
 
+### grunt ###
+# Grunt usually compiles files inside this directory
+dist/
+
+# Grunt usually preprocesses files such as coffeescript, compass... inside the .tmp directory
+.tmp/
+
+
 ### Sass ###
-.sass-cache
+.sass-cache/
 *.css.map
+
+
+### CoffeeScript ###
+*.js
+*.js.map
 
 
 ### SublimeText ###
@@ -72,3 +82,16 @@ $RECYCLE.BIN/
 
 # sftp configuration file
 sftp-config.json
+
+
+### Bower ###
+bower_components
+.bower-cache
+.bower-registry
+.bower-tmp
+
+node_modules
+.npm-debug.log
+.tmp
+assets
+source/svg_min
